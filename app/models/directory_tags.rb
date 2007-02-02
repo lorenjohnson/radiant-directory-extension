@@ -13,8 +13,8 @@ class DirectoryTags < Page
   end
   tag "directory:map" do |tag|
     %{
-      <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAKsmqeCs1JL6iKytv5zPbWRR3kDcvJrVMbmPglKyZN_EpR3_VZBTOpBNdX5K17k8MNdgBFu9RmP7szw" type="text/javascript"></script>
-    	<script src="/directory_extension/scripts/directory.js" type="text/javascript"></script> 
+      <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=#{Radiant::Config['directory.google_map_key']}" type="text/javascript"></script>
+    	<script src="/assets/template/scripts/directory.js" type="text/javascript"></script> 
       <div id="map"></div>
     }
   end
@@ -26,9 +26,20 @@ class DirectoryTags < Page
     content = ''
     @orgs.each do |org|
       unless org.lat.blank? or org.lng.blank?
+        # convert this to directory:map_details
+        content << 
+        %{
+          <div id='detail_#{org.id}' style='display: none;'>
+            <b>#{org.name}</b><br />
+            #{org.address_line1}<br />
+            #{org.address_city}, #{org.address_state} #{org.address_zip}<br />
+            Phone #{org.phone}
+            <a href="http://#{org.website_url}" class="external">Website</a>
+          </div>
+        }
         @map_markers << 
         %{
-          map_add_point(#{org.lat},#{org.lng});
+          map_add_point(#{org.lat},#{org.lng},$('detail_#{org.id}').innerHTML);
         }
       end
       # ,$('content#{org.id}').innerHTML
@@ -43,7 +54,7 @@ class DirectoryTags < Page
         }
       </script>      
       }
-    content
+    # content
   end
    
   tag "directory:results:count" do |tag|
