@@ -16,9 +16,9 @@
 -- Table structure for table `directory_deaneries`
 -- 
 
-USE diopa_mental_test
+USE diopa_mental_prep
 
-CREATE TABLE `church_finder_deaneries` (
+CREATE TABLE `directory_deaneries` (
   `deanery_id` int(11) NOT NULL auto_increment,
   `deanery` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`deanery_id`),
@@ -29,7 +29,7 @@ CREATE TABLE `church_finder_deaneries` (
 -- Dumping data for table `directory_deaneries`
 -- 
 
-INSERT INTO `church_finder_deaneries` (`deanery_id`, `deanery`) VALUES 
+INSERT INTO `directory_deaneries` (`deanery_id`, `deanery`) VALUES 
 (1, 'Brandywine'),
 (2, 'Bucks'),
 (3, 'Conestoga'),
@@ -48,7 +48,7 @@ INSERT INTO `church_finder_deaneries` (`deanery_id`, `deanery`) VALUES
 -- Table structure for table `directory_orgs`
 -- 
 
-CREATE TABLE `church_finder_orgs` (
+CREATE TABLE `directory_orgs` (
   `org_id` int(11) NOT NULL auto_increment,
   `org_name` varchar(100) default NULL,
   `org_address_line1` varchar(100) default NULL,
@@ -71,7 +71,7 @@ CREATE TABLE `church_finder_orgs` (
 -- Dumping data for table `directory_orgs`
 -- 
 
-INSERT INTO `church_finder_orgs` (`org_id`, `org_name`, `org_address_line1`, `org_address_line2`, `org_address_city`, `org_address_state`, `org_address_zip`, `org_phone`, `org_fax`, `org_website_url`, `org_deanery`, `lat`, `lng`, `ignore_address`, `org_created`) VALUES 
+INSERT INTO `directory_orgs` (`org_id`, `org_name`, `org_address_line1`, `org_address_line2`, `org_address_city`, `org_address_state`, `org_address_zip`, `org_phone`, `org_fax`, `org_website_url`, `org_deanery`, `lat`, `lng`, `ignore_address`, `org_created`) VALUES 
 (1, 'Church of the Good Samaritan, Paoli', '212 West Lancaster Avenue', '', 'Paoli', 'PA', '19301', '6106444040', '6106441904', 'www.good-samaritan.org', 'Brandywine', '40.041637', '-75.491902', 0, '2006-06-19 19:21:56'),
 (2, 'St. Mark''s Church, Honey Brook', '1040 Chestnut Tree Road', '', 'Honey Brook', 'PA', '193440326', '6109422365', '', 'www.stmarkshb.org', 'Brandywine', '40.109335', '-75.849879', 0, '2006-06-19 19:21:56'),
 (3, 'Church of the Advent, Kennett Square', '201 Crestline Drive', '', 'Kennett Square', 'PA', '193482422', '6104444624', '6104441842', 'www.church-of-the-advent.com', 'Brandywine', '39.851848', '-75.717617', 0, '2006-06-19 19:21:56'),
@@ -236,7 +236,7 @@ INSERT INTO `church_finder_orgs` (`org_id`, `org_name`, `org_address_line1`, `or
 -- Table structure for table `directory_people`
 -- 
 
-CREATE TABLE `church_finder_people` (
+CREATE TABLE `directory_people` (
   `people_id` int(11) NOT NULL auto_increment,
   `people_first_name` varchar(100) default NULL,
   `people_last_name` varchar(100) default NULL,

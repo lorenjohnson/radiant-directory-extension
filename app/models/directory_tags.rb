@@ -45,10 +45,11 @@ class DirectoryTags < Page
       }
     content
   end
-
+   
   tag "directory:results:count" do |tag|
     @orgs.nitems
   end
+  
   DirectoryOrg.column_names.each do |column|
     desc %{ <r:directory:#{column} /> }
     tag "directory:#{column}" do |tag|
@@ -84,9 +85,9 @@ class DirectoryTags < Page
   end
   tag "directory:search:by_name:name_field" do |tag|
     current_value = @name_search
-	  %{
-	   <input id="nameSearch" name="nameSearch" type="text" value="#{current_value}" />  
-	  }   
+   	  %{
+   	   <input id="nameSearch" name="nameSearch" type="text" value="#{current_value}" />  
+   	  }   
   end
   tag "directory:search:by_name:submit_button" do |tag|
     %{
@@ -105,15 +106,15 @@ class DirectoryTags < Page
   end
   tag "directory:search:by_proximity:address_field" do |tag|
     current_value = @proximity_search_address
-	  %{
-	   <input id="proximitySearchAddress" name="proximitySearchAddress" type="text" value="#{current_value}" />  
-	  }   
+   	  %{
+   	   <input id="proximitySearchAddress" name="proximitySearchAddress" type="text" value="#{current_value}" />  
+   	  }   
   end
   tag "directory:search:by_proximity:distance_field" do |tag|
     current_value = @proximity_search_distance
-	  %{
-	   <input id="proximitySearchAddress" name="proximitySearchDistance" type="text" value="#{current_value}" />  
-	  }   
+   	  %{
+   	   <input id="proximitySearchAddress" name="proximitySearchDistance" type="text" value="#{current_value}" />  
+   	  }   
   end
   tag "directory:search:by_proximity:submit_button" do |tag|
     %{
