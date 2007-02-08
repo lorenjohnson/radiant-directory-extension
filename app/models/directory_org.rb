@@ -1,6 +1,6 @@
 class DirectoryOrg < ActiveRecord::Base
   belongs_to :directory_deanery
-  attr :distance
+  # attr :distance
 
   def DirectoryOrg.find_all_by_point_and_radius(lat, lng, radius)
     #make sure we have valid parameters
@@ -38,4 +38,41 @@ class DirectoryOrg < ActiveRecord::Base
                             <= #{radius}",
           :order => "distance")
   end
+
+  def phone_formatted
+    number_to_phone(phone)
+  end
+
+  def address_zip_formatted
+    zip = address_zip[0..4]
+    zip.concat("-" << address_zip[5..8]) unless address_zip[5..8].blank?
+    return zip
+  end
+  
+private
+
+  # straight out of ActionController...
+  def number_to_phone(number, options = {})
+    number       = number.to_s.strip unless number.nil?
+    options      = options.stringify_keys
+    area_code    = options["area_code"] || nil
+    delimiter    = options["delimiter"] || "-"
+    extension    = options["extension"].to_s.strip || nil
+    country_code = options["country_code"] || nil
+
+    begin
+      str = ""
+      str << "+#{country_code}#{delimiter}" unless country_code.blank?
+      str << if area_code
+        number.gsub!(/([0-9]{1,3})([0-9]{3})([0-9]{4}$)/,"(\\1) \\2#{delimiter}\\3")
+      else
+        number.gsub!(/([0-9]{1,3})([0-9]{3})([0-9]{4})$/,"\\1#{delimiter}\\2#{delimiter}\\3")
+      end
+      str << " x #{extension}" unless extension.blank?
+      str
+    rescue
+      number
+    end
+  end
+  
 end

@@ -5,7 +5,7 @@ class DirectoryExtension < Radiant::Extension
 
   define_routes do |map|
     # map.connect 'admin/church_finder/:action', :controller => 'admin/asset'
-    map.connect 'directory/:nameSearch', :controller => 'site', :action => 'show_page', :url => 'directory'
+    # map.connect 'directory/:nameSearch', :controller => 'site', :action => 'show_page', :url => 'directory'
   end
   
   def activate

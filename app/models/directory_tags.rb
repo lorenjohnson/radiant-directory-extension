@@ -12,11 +12,12 @@ class DirectoryTags < Page
     tag.expand
   end
   tag "directory:map" do |tag|
-    %{
+    content = %{
       <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=#{Radiant::Config['directory.google_map_key']}" type="text/javascript"></script>
     	<script src="/assets/template/scripts/directory.js" type="text/javascript"></script> 
-      <div id="map"></div>
-    }
+      <div id="map"></div> }
+    content << %{ <script type="text/javascript">search_address="#{@proximity_search_address}"</script> } unless @proximity_search_address.blank?
+    content
   end
   tag "directory:results" do |tag|
     tag.expand
@@ -24,37 +25,26 @@ class DirectoryTags < Page
   # Directory Search Results
   tag "directory:results:each" do |tag|
     content = ''
+    @map_markers = []
     @orgs.each do |org|
       unless org.lat.blank? or org.lng.blank?
-        # convert this to directory:map_details
-        content << 
-        %{
-          <div id='detail_#{org.id}' style='display: none;'>
-            <b>#{org.name}</b><br />
-            #{org.address_line1}<br />
-            #{org.address_city}, #{org.address_state} #{org.address_zip}<br />
-            Phone #{org.phone}
-            <a href="http://#{org.website_url}" class="external">Website</a>
-          </div>
-        }
-        @map_markers << 
-        %{
-          map_add_point(#{org.lat},#{org.lng},$('detail_#{org.id}').innerHTML);
-        }
+        lat = org.lat.to_f
+        lng = org.lng.to_f
+      else
+        lat = false
+        lng = false
       end
-      # ,$('content#{org.id}').innerHTML
+      # [ lat, 
+      #   lng, 
+      #   marker tooltip, 
+      #   dom id of infoWindow content, 
+      #   dom id of results row outside of map,
+      #   customIconClass ]
+      @map_markers << [lat,lng,org.name, "infoWindow_" + org.id.to_s, "result_" + org.id.to_s]
       tag.locals.org = org
       content << tag.expand
     end
-    content << 
-    %{ 
-      <script type="text/javascript">
-        function add_markers() {
-          #{@map_markers}
-        }
-      </script>      
-      }
-    # content
+    content << %{ <script type="text/javascript">points_array = #{@map_markers.to_json}</script> }
   end
    
   tag "directory:results:count" do |tag|
@@ -67,8 +57,48 @@ class DirectoryTags < Page
       hash = tag.locals.org
       hash[column].to_s
     end
+    tag "directory:if_#{column}" do |tag|
+      hash = tag.locals.org
+      tag.expand unless hash[column].blank?      
+    end
   end
+
+  tag "directory:phone" do |tag|
+    # number_to_phone(tag.locals.org.phone)
+    tag.locals.org.phone_formatted
+  end 
+
+  tag "directory:address_zip" do |tag|
+    # zip = tag.locals.org.address_zip[0..4]
+    # zip = zip.concat("-" << tag.locals.org.address_zip[5..8]) unless tag.locals.org.address_zip[5..8].blank?
+    tag.locals.org.address_zip_formatted
+  end 
   
+  tag "directory:website_link" do |tag|
+    %{ 
+       <a href="http://#{tag.locals.org.website_url}" class="#{tag.attr['class']}">
+         #{tag.expand}
+       </a> 
+      } unless tag.locals.org.website_url.blank?
+  end 
+  tag "directory:directions_link" do |tag|
+    starting_address = %{#{tag.locals.org.address_line1},#{tag.locals.org.address_city},#{tag.locals.org.address_state} #{tag.locals.org.address_zip}}
+    destination_address = ""
+    destination_address = @proximity_search_address unless @proximity_search_address.blank?
+    %{
+      <a href="http://maps.google.com/maps?f=d&hl=en&saddr=#{URI.encode(starting_address)}&daddr=#{URI.encode(destination_address)}&ie=UTF8&om=1" class="#{tag.attr['class']}">
+       #{tag.expand}
+     </a>
+    }
+  end
+  tag "directory:if_distance" do |tag|
+    tag.expand unless @proximity_search_address.blank? 
+  end
+  tag "directory:distance" do |tag|
+   format_string = tag.attr['format'].blank? ? "%.1f miles" : tag.attr['format']
+   format_string % tag.locals.org.distance unless @proximity_search_address.blank? 
+  end
+
   # Directory Search By Name Form Tags
   tag "directory:search" do |tag|
     tag.expand
@@ -89,7 +119,7 @@ class DirectoryTags < Page
   end
   tag "directory:search:by_name:form" do |tag|
     %{
-  	<form id="nameSearchForm" name="nameSearchForm" method="get">
+  	<form id="nameSearchForm" name="nameSearchForm" class="#{tag.attr['class']}" method="get">
       #{tag.expand}
   	</form>
     }
@@ -110,22 +140,22 @@ class DirectoryTags < Page
   end
   tag "directory:search:by_proximity:form" do |tag|
     %{
-  	<form id="proximitySearchForm" name="proximitySearchForm" method="get">
+  	<form id="proximitySearchForm" name="proximitySearchForm" class="#{tag.attr['class']}" method="get">
       #{tag.expand}
   	</form>
     }  
   end
   tag "directory:search:by_proximity:address_field" do |tag|
     current_value = @proximity_search_address
-   	  %{
-   	   <input id="proximitySearchAddress" name="proximitySearchAddress" type="text" value="#{current_value}" />  
-   	  }   
+    %{ <input id="proximitySearchAddress" name="proximitySearchAddress" type="text" value="#{current_value}" /> }   
   end
   tag "directory:search:by_proximity:distance_field" do |tag|
     current_value = @proximity_search_distance
-   	  %{
-   	   <input id="proximitySearchAddress" name="proximitySearchDistance" type="text" value="#{current_value}" />  
-   	  }   
+   	content = %{<select id="proximitySearchDistance" name="proximitySearchDistance">}
+    [2,5,10,15,20,25,"any"].each do |n|
+      content << %{<option value="#{n}"#{' selected="selected"' if n == current_value.to_i}>Within #{n} miles of</option>}  
+   	end 
+    content << "</select>"
   end
   tag "directory:search:by_proximity:submit_button" do |tag|
     %{
@@ -144,14 +174,14 @@ class DirectoryTags < Page
     @map_markers = ""
 
     unless @name_search.blank? then
-      @orgs = DirectoryOrg.find(:all, :conditions => ["name LIKE ?", "%#{@name_search}%"]  )
+      @orgs = DirectoryOrg.find(:all, :conditions => ["name LIKE ?", "%#{@name_search}%"], :order => "name ASC"  )
     else 
       unless @proximity_search_address.blank? 
-        @proximity_search_distance = 5 if @proximity_search_distance.blank?  
-        latlng = geocode(@proximity_search_address)
-        @orgs = DirectoryOrg.find_all_by_point_and_radius(latlng[0], latlng[1], @proximity_search_distance)
+        @proximity_search_distance = 1000 if @proximity_search_distance.blank?  
+        lat, lng = geocode(@proximity_search_address)
+        @orgs = DirectoryOrg.find_all_by_point_and_radius(lat, lng, @proximity_search_distance)
       else 
-        @orgs = DirectoryOrg.find(:all)
+        @orgs = DirectoryOrg.find(:all, :order => "name ASC")
       end    
     end    
 
@@ -167,18 +197,17 @@ class DirectoryTags < Page
   #   # end
   #   super
   # end  
+  
+
 
   def geocode(address)
-    # require 'uri'
-    # require 'net/http'
     require 'rexml/document'
     require 'open-uri'   
-    
-    uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=ABQIAAAAKsmqeCs1JL6iKytv5zPbWRQyt0jC_m_YyhurHdIvODC7HA1gCxRx5WLtgBIyCDw0ay51LSUcOzBjcA"
+    # ABQIAAAAKsmqeCs1JL6iKytv5zPbWRQyt0jC_m_YyhurHdIvODC7HA1gCxRx5WLtgBIyCDw0ay51LSUcOzBjcA    
+    uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=#{Radiant::Config["directory.google_map_key"]}"
     response = open(uri).read
     response = REXML::Document.new(response)
     lng, lat  = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }   
-    # @debug = [lat, lng]
     return [lat, lng]
   end
   
