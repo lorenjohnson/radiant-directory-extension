@@ -48,7 +48,7 @@ class DirectoryTags < Page
   end
    
   tag "directory:results:count" do |tag|
-    @orgs.nitems
+    @orgs.nitems 
   end
   
   DirectoryOrg.column_names.each do |column|
@@ -150,10 +150,12 @@ class DirectoryTags < Page
     %{ <input id="proximitySearchAddress" name="proximitySearchAddress" type="text" value="#{current_value}" /> }   
   end
   tag "directory:search:by_proximity:distance_field" do |tag|
-    current_value = @proximity_search_distance
+    default_value = tag.attr["default_value"].blank? ? 5 : tag.attr["default_value"]
+    current_value = @proximity_search_distance.blank? ? default_value : @proximity_search_distance
    	content = %{<select id="proximitySearchDistance" name="proximitySearchDistance">}
-    [2,5,10,15,20,25,"any"].each do |n|
-      content << %{<option value="#{n}"#{' selected="selected"' if n == current_value.to_i}>Within #{n} miles of</option>}  
+    options = tag.attr['options'].blank? ? [["2 Miles",2],["5 Miles",5],["10 Miles",10],["20 Miles",20],["All",10000]] : tag.attr['options']
+    options.each do |text, value|
+      content << %{<option value="#{value}"#{' selected="selected"' if value == current_value.to_i}>#{text}</option>}  
    	end 
     content << "</select>"
   end
