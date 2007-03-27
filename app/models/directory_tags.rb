@@ -86,7 +86,7 @@ class DirectoryTags < Page
     destination_address = ""
     destination_address = @proximity_search_address unless @proximity_search_address.blank?
     %{
-      <a href="http://maps.google.com/maps?f=d&hl=en&saddr=#{URI.encode(starting_address)}&daddr=#{URI.encode(destination_address)}&ie=UTF8&om=1" class="#{tag.attr['class']}">
+      <a href="http://maps.google.com/maps?f=d&amp;hl=en&amp;saddr=#{URI.encode(starting_address)}&amp;daddr=#{URI.encode(destination_address)}&amp;ie=UTF8&amp;om=1" class="#{tag.attr['class']}">
        #{tag.expand}
      </a>
     }
@@ -206,97 +206,12 @@ class DirectoryTags < Page
     require 'rexml/document'
     require 'open-uri'   
     # ABQIAAAAKsmqeCs1JL6iKytv5zPbWRQyt0jC_m_YyhurHdIvODC7HA1gCxRx5WLtgBIyCDw0ay51LSUcOzBjcA    
-    uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=#{Radiant::Config["directory.google_map_key"]}"
+    uri = "http://maps.google.com/maps/geo&amp;q=" << URI::encode(address) << "&amp;output=xml&amp;key=#{Radiant::Config["directory.google_map_key"]}"
     response = open(uri).read
     response = REXML::Document.new(response)
     lng, lat  = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }   
     return [lat, lng]
   end
-  
-  
-  # description %{
-  #   Directory tags to create a searchable directory within Radiant.
-  # }
-  # 
-  # desc %{ <r:directory /> 
-  #         drop the whole church finder end-user application where this tag is placed 
-  #       }
-  # tag "directory:map" do |tag|
-  #   %{
-  #     <div id="map"></div>
-  #   }
-  # end
-  # tag "directory:search" do |tag|
-  #   tag.expand
-  # end
-  # tag "directory:search:by_name" do |tag|
-  #   %{
-  #     <form id="nameSearchForm" name="nameSearchForm" onsubmit="javascript:searchByName($('nameSearch')); return false;">
-  # 			<label for="nameSearch">Search by Name</label>
-  # 			<input type="text" id="nameSearch" name="nameSearch" onkeyup="" />
-  # 			<input id="searchByNameButton" name="searchByNameButton" type="button" onClick="javascript:searchByName();" value="Search" />
-  # 		</form>
-  # 		}
-  # end
-  # tag "directory:search:by_deanery" do |tag|
-  #   %{
-  #   	<form id="deanerySearchForm" name="deanerySearchForm" onsubmit="javascript:searchByDeanery($('deanerySearch')); return false;">
-  #   		<label for="deanerySearch">Search by Deanery</label>
-  #   		<select name="deanerySearch" id="deanerySearch" >	
-  #   			<option value=""></option>
-  #   			<option value="Brandywine">Brandywine</option>
-  #   			<option value="Bucks">Bucks</option>
-  #   			<option value="Conestoga">Conestoga</option>	
-  #   			<option value="Delaware">Delaware</option>	
-  #   			<option value="Merion">Merion</option>
-  #   			<option value="Montgomery">Montgomery</option>
-  #   			<option value="Pennypack">Pennypack</option>
-  #   			<option value="Schuylkill">Schuylkill</option>
-  #   			<option value="Southwark">Southwark</option>
-  #   			<option value="Valley Forge">Valley Forge</option>
-  #   			<option value="Wissahickon">Wissahickon</option>
-  #   		</select>
-  #   		<input id="searchByDeaneryButton" name="searchByDeaneryButton" type="button" onClick="javascript:searchByDeanery();" value="Search" />
-  #   	</form>
-  # 	}
-  # end
-  # tag "directory:search:by_address" do |tag|
-  #   %{
-  #     <form id="addressSearchForm" name="addressSearchForm" onsubmit="javascript: return false;">
-  # 			<label for="addressSearch">Show Churches Near Your Address</label>
-  # 			<input type="text" id="addressSearch" name="addressSearch" />
-  # 			<input id="searchbyAddress" name="searchbyAddress" type="button" onClick="javascript:showChurchesNearAddress($F(addressSearch),$F(addressSearch),blueicon,11);" value="Search" />
-  # 		</form>
-  # 		%}
-  # end
-  # tag "directory:search_results" do |tag|
-  #   %{
-  #     <div id="resultsPanel">
-  #   		<div id="searchResultsLabel">Search Results</div>
-  #   		<div id="status"></div>
-  #   		<div id="searchResults"></div>
-  #   	</div>
-  #   }
-  # end
-  
-  # require 'open-uri'
-  # open("http://localhost:3020/church_finder_source").read    
-  # 
-  # tag 'external_content' do |tag|
-  #   require 'open-uri'
-  #  
-  #   open(tag.attr['url']).read
-  # end
-  
-  # def process(request, response)  
-  #   @request, @response = request, response
-  #   if valid_post?
-  #     response.redirect parent.url
-  #     request, response = nil, nil
-  #   else
-  #     response.redirect parent.url
-  #   end
-  # end
   
 end
 
