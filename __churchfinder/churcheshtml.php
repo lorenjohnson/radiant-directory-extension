@@ -92,7 +92,7 @@ while ($msg_data = mysql_fetch_array($result))
 		$lng = is_numeric($msg_data['lng']) ? $msg_data['lng'] : 0 ;
 		$directions_address =  $msg_data['org_address_line1'] . ', ' . $msg_data['org_address_city'] . ', ' . $msg_data['org_address_state'] . ' ' . $msg_data['org_address_zip'];
 		$directions_link =  <<<EOT
-<a href="http://maps.google.com/maps?f=d&hl=en&saddr=<script>$F('searchByAddress')</script>&daddr=$address_line1,$address_city, $address_state $address_zip&ie=UTF8&om=1" target="_blank" class="external">Directions</a>
+<a href="http://maps.google.com/maps?f=d&amp;hl=en&amp;saddr=<script>$F('searchByAddress')</script>&amp;daddr=$address_line1,$address_city,%20$address_state%20$address_zip&amp;ie=UTF8&amp;om=1" target="_blank" class="external">Directions</a>
 EOT;
 		$html .= <<<EOT
 	<tr>
