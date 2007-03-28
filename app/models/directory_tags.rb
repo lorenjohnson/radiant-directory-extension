@@ -86,7 +86,7 @@ class DirectoryTags < Page
     destination_address = ""
     destination_address = @proximity_search_address unless @proximity_search_address.blank?
     %{
-      <a href="#{URI.encode("http://maps.google.com/maps?f=d&hl=en&saddr=" + starting_address + "&daddr=" + destination_address + "&ie=UTF8&om=1")} class="#{tag.attr['class']}">
+      <a href="http://maps.google.com/maps?f=d&amp;hl=en&amp;saddr=#{starting_address}&amp;daddr=#{destination_address}&amp;ie=UTF8&amp;om=1" class="#{tag.attr['class']}">
        #{tag.expand}
      </a>
     }
