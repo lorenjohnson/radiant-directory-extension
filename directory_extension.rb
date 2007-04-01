@@ -1,20 +1,19 @@
 class DirectoryExtension < Radiant::Extension
   version "1.0"
-  description "Radiant Directory Extension."
-  url "http://www.diotribe.net"
+  description "Radiant Organization Directory Extension."
+  url "http://www.fn-group.com"
 
   define_routes do |map|
-    # map.connect 'admin/church_finder/:action', :controller => 'admin/asset'
-    # map.connect 'directory/:nameSearch', :controller => 'site', :action => 'show_page', :url => 'directory'
+    map.resources :directory_orgs, :path_prefix => "/admin"
   end
   
   def activate
-    # admin.tabs.add "Church Finder", "/admin/church_finder", :after => "Layouts", :visibility => [:all]
+    admin.tabs.add "Church Directory", "/admin/directory_orgs", :after => "Layouts", :visibility => [:all]
     DirectoryTags
   end
   
   def deactivate
-    # admin.tabs.remove "Church Finder"
+    admin.tabs.remove "Church Directory"
   end
     
 end
