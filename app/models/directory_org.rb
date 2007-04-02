@@ -1,4 +1,5 @@
 class DirectoryOrg < ActiveRecord::Base
+  validates_presence_of :name, :address_line1, :address_city, :address_state, :address_zip
   belongs_to :directory_deanery
   # attr :distance
 
@@ -37,6 +38,25 @@ class DirectoryOrg < ActiveRecord::Base
                               (lng-#{lng}),2)) 
                             <= #{radius}",
           :order => "distance")
+  end
+  
+  def geocode
+    require 'rexml/document'
+    require 'open-uri'   
+    address = address_line1 + ", " + address_city + ", " + address_state + " " + address_zip[0..4]
+    uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=#{Radiant::Config['directory.google_map_key']}"
+    response = open(uri).read
+    response = REXML::Document.new(response)
+    status = response.elements['kml/Response/Status/code'].text
+
+    if status == "200"
+      self.lng, self.lat = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }
+      self.save
+      return true
+    else
+      self.errors.add_to_base("Geocoding failed. Check the address.")
+      return false
+    end
   end
 
   def phone_formatted
