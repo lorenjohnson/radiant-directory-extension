@@ -1,13 +1,5 @@
 class DirectoryTags < Page
-  # <style type="text/css" media="screen">
-  #   @import url("/directory_extension/stylesheets/directory.css");
-  # </style>
-  # <!--[if IE]>
-  #   <style type="text/css" media="screen">
-  #     @import url("/directory_extension/stylesheets/directory_ie.css");
-  #   </style>
-  # <![endif]-->
-
+  
   tag "directory" do |tag|
     tag.expand
   end
@@ -34,12 +26,6 @@ class DirectoryTags < Page
         lat = false
         lng = false
       end
-      # [ lat, 
-      #   lng, 
-      #   marker tooltip, 
-      #   dom id of infoWindow content, 
-      #   dom id of results row outside of map,
-      #   customIconClass ]
       @map_markers << [lat,lng,org.name, "infoWindow_" + org.id.to_s, "result_" + org.id.to_s]
       tag.locals.org = org
       content << tag.expand
@@ -69,8 +55,6 @@ class DirectoryTags < Page
   end 
 
   tag "directory:address_zip" do |tag|
-    # zip = tag.locals.org.address_zip[0..4]
-    # zip = zip.concat("-" << tag.locals.org.address_zip[5..8]) unless tag.locals.org.address_zip[5..8].blank?
     tag.locals.org.address_zip_formatted
   end 
   
@@ -190,18 +174,6 @@ class DirectoryTags < Page
     super
   end
 
-  # def render
-  #   # if @request.post?
-  #   # if !@request.path_parameters[:distance].blank? and !@request.path_parameters[:addressSearch].blank? then
-  #   #   latlng = geocode(params[:addressSearch])
-  #   #   @orgs = DirectoryOrg.find_by_point_and_radius(latlng[0],latlng[1],@request.path_parameters[:distance].to_i)
-  #   #   @lat, @lng = latlng[0], latlng[1]
-  #   # end
-  #   super
-  # end  
-  
-
-
   def geocode(address)
     require 'rexml/document'
     require 'open-uri'   
@@ -212,6 +184,7 @@ class DirectoryTags < Page
     lng, lat  = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }   
     return [lat, lng]
   end
+
   
 end
 
