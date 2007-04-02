@@ -16,9 +16,11 @@ class DirectoryOrgsController < ApplicationController
 
   def update
     @organization = DirectoryOrg.find(params[:id])
-    if @organization.update_attributes(params[:directory_org])
+    if @organization.update_attributes(params[:directory_org]) and @organization.geocode
       redirect_to directory_orgs_url
     else
+      flash[:notice] = ""
+      @organization.errors.each_full { |e| flash[:notice] << e << ". " }
       render :action => "edit"
     end
   end
@@ -29,10 +31,12 @@ class DirectoryOrgsController < ApplicationController
   
   def create
     @organization = DirectoryOrg.new(params[:directory_org])    
-    if @organization.save
+    if @organization.save and @organization.geocode
       flash[:notice] = 'Organization was successfully created.'        
       redirect_to directory_orgs_url
     else
+      flash[:notice] = ""
+      @organization.errors.each_full { |e| flash[:notice] << e << ". " }
       render :action => "new"
     end
   end
