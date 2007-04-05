@@ -177,8 +177,7 @@ class DirectoryTags < Page
   def geocode(address)
     require 'rexml/document'
     require 'open-uri'   
-    # ABQIAAAAKsmqeCs1JL6iKytv5zPbWRQyt0jC_m_YyhurHdIvODC7HA1gCxRx5WLtgBIyCDw0ay51LSUcOzBjcA    
-    uri = "http://maps.google.com/maps/geo&amp;q=" << URI::encode(address) << "&amp;output=xml&amp;key=#{Radiant::Config["directory.google_map_key"]}"
+    uri = "http://maps.google.com/maps/geo?q=#{URI::encode(address)}&output=xml&key=#{Radiant::Config["directory.google_map_key"]}"
     response = open(uri).read
     response = REXML::Document.new(response)
     lng, lat  = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }   
