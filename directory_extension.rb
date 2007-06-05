@@ -8,12 +8,12 @@ class DirectoryExtension < Radiant::Extension
   end
   
   def activate
-    admin.tabs.add "Church Directory", "/admin/directory_orgs", :after => "Layouts", :visibility => [:all]
-    DirectoryTags
+    admin.tabs.add "Directory", "/admin/directory_orgs", :after => "Layouts", :visibility => [:all]
+    # DirectoryTags
   end
   
   def deactivate
-    admin.tabs.remove "Church Directory"
+    admin.tabs.remove "Directory"
   end
     
 end
