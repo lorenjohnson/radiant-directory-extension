@@ -37,18 +37,21 @@ class DirectoryTags < Page
     @orgs.nitems 
   end
   
-  DirectoryOrg.column_names.each do |column|
-    desc %{ <r:directory:#{column} /> }
-    tag "directory:#{column}" do |tag|
-      hash = tag.locals.org
-      hash[column].to_s
+  begin
+    DirectoryOrg.column_names.each do |column|
+      desc %{ <r:directory:#{column} /> }
+      tag "directory:#{column}" do |tag|
+        hash = tag.locals.org
+        hash[column].to_s
+      end
+      tag "directory:if_#{column}" do |tag|
+        hash = tag.locals.org
+        tag.expand unless hash[column].blank?      
+      end
     end
-    tag "directory:if_#{column}" do |tag|
-      hash = tag.locals.org
-      tag.expand unless hash[column].blank?      
-    end
+  rescue
   end
-
+  
   tag "directory:phone" do |tag|
     # number_to_phone(tag.locals.org.phone)
     tag.locals.org.phone_formatted
