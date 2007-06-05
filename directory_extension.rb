@@ -8,7 +8,7 @@ class DirectoryExtension < Radiant::Extension
   end
   
   def activate
-    Radiant::Config['directory.google_map_key'] = "fill in your Google Maps key here"
+    Radiant::Config['directory.google_map_key'] = "xxxx"
     admin.tabs.add "Directory", "/admin/directory_orgs", :after => "Layouts", :visibility => [:all]
     DirectoryTags
   end
