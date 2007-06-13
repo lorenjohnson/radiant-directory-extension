@@ -1,8 +1,11 @@
 class DirectoryTags < Page
-  
+
+  desc %{ Directory root node. }
   tag "directory" do |tag|
     tag.expand
   end
+
+  desc %{ Directory Google Map. Relies on setting in Radiant::Config['directory.google_map_key'] for authorizing to the Google Maps API. Responds to search forms for Proximity Search. }
   tag "directory:map" do |tag|
     content = %{
       <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=#{Radiant::Config['directory.google_map_key']}" type="text/javascript"></script>
@@ -11,10 +14,12 @@ class DirectoryTags < Page
     content << %{ <script type="text/javascript">search_address="#{@proximity_search_address}"</script> } unless @proximity_search_address.blank?
     content
   end
+
   tag "directory:results" do |tag|
     tag.expand
   end
-  # Directory Search Results
+
+  desc %{ Directory search results. }
   tag "directory:results:each" do |tag|
     content = ''
     @map_markers = []
@@ -33,13 +38,14 @@ class DirectoryTags < Page
     content << %{ <script type="text/javascript">points_array = #{@map_markers.to_json}</script> }
   end
    
+  desc %{ Count of items in current search results set. }
   tag "directory:results:count" do |tag|
     @orgs.nitems 
   end
   
   begin
     DirectoryOrg.column_names.each do |column|
-      desc %{ <r:directory:#{column} /> }
+      desc %{ Display directory #{column}.  }
       tag "directory:#{column}" do |tag|
         hash = tag.locals.org
         hash[column].to_s
@@ -52,15 +58,22 @@ class DirectoryTags < Page
   rescue
   end
   
+  desc %{ Displays the formatted phone number. }
   tag "directory:phone" do |tag|
-    # number_to_phone(tag.locals.org.phone)
     tag.locals.org.phone_formatted
   end 
 
+  desc %{ Displays the formatted zip code. }
   tag "directory:address_zip" do |tag|
     tag.locals.org.address_zip_formatted
   end 
   
+  desc %{ Creates a link to the website for this result. If no website_url exists nothing is generated. Tag has a class attribute for injecting a CSS class on the generated link.
+    
+          Usage:
+          <pre><code>
+          <r:directory:website_link [class=""] />
+          </code></pre> }
   tag "directory:website_link" do |tag|
     %{ 
        <a href="http://#{tag.locals.org.website_url}" class="#{tag.attr['class']}">
@@ -68,6 +81,13 @@ class DirectoryTags < Page
        </a> 
       } unless tag.locals.org.website_url.blank?
   end 
+
+  desc %{ Creates a dirving directions link for this result. Assembles starting address from current result and ending address is captured from proximity search fields. If no proximity search has been initated or implemented the link will just go to Google Maps with the result's address. Tag has a class attribute for injecting a CSS class on the generated link.
+    
+          Usage:
+          <pre><code>
+          <r:directory:directions_links [class=""] />
+          </code></pre> }
   tag "directory:directions_link" do |tag|
     starting_address = %{#{tag.locals.org.address_line1},#{tag.locals.org.address_city},#{tag.locals.org.address_state} #{tag.locals.org.address_zip}}
     destination_address = ""
@@ -78,15 +98,19 @@ class DirectoryTags < Page
      </a>
     }
   end
+  
+  desc %{ A simple logic tag for switching parts of the results on/off based on whether a proximity search address is present or not. }  
   tag "directory:if_distance" do |tag|
     tag.expand unless @proximity_search_address.blank? 
   end
+
+  desc %{ Shows distance from starting address to this result, assumes a proximity search has ben issued. }
   tag "directory:distance" do |tag|
    format_string = tag.attr['format'].blank? ? "%.1f miles" : tag.attr['format']
    format_string % tag.locals.org.distance unless @proximity_search_address.blank? 
   end
 
-  # Directory Search By Name Form Tags
+  desc %{ Directory Search By Name Form Tags }
   tag "directory:search" do |tag|
     tag.expand
   end
