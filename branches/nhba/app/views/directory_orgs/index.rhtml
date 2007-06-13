@@ -1,0 +1,26 @@
+<%= render :partial => "header" %>
+<h1>Directory</h1>
+<table class="subscriptionList">
+  <tr>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Phone</th>
+    <th>Website URL</th>
+    <th></th>
+  </tr>
+<% alternate = false %>
+<% @organizations.each do |org| %>
+  <tr class="orgRow <%= alternate ? "alternate" : "" %>" id="org_<%=org.id%>">
+    <td style="font-weight:bold;"><%=org.name%></td>
+    <td>
+      <%=org.address_line1%><br />
+      <%=org.address_city%>, <%=org.address_state%> <%=org.address_zip%>
+    </td>
+    <td><%=org.phone%></td>
+    <td><%=org.website_url%></td>
+    <td width="100px"><%= link_to "Edit", edit_directory_org_path(org) %> | <%= link_to 'Destroy', directory_org_path(org), :confirm => "Are you sure you wish to delete this record?", :method => :delete %></td>
+  </tr>
+  <% alternate = !alternate %>
+<% end %>
+</table>
+<div style="text-align:right;width:100%;"><%= link_to 'Add an Organization', new_directory_org_path %></div>

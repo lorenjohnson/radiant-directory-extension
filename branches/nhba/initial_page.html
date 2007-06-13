@@ -1,0 +1,156 @@
+body:
+<div id="churchFinder">
+  <r:directory:map />
+  <div id="resultsPanel">
+    <div id="searchResults">
+      <table>
+        <r:directory:results:each>
+        <tr>
+          <td class="name">
+            <r:directory:name />
+          </td>
+          <td class="address">
+            <r:directory:address_line1 /><br />
+            <r:directory:address_city />, <r:directory:address_state /> <r:directory:address_zip />
+          </td>
+          <td class="phone">
+            <r:directory:phone />
+          </td>
+          <td class="website">
+            <a href="<r:directory:website_url />" class="external">Website</a>
+          </td>
+          <td class="deanery">
+            <r:directory:deanery />
+          </td>
+        </tr>
+        </r:directory:results:each>
+      </table>
+    </div>
+  </div>
+</div>
+
+css:
+#churchFinder {
+	width:600;
+}
+#churchFinder #map
+{
+	height: 200px;
+	margin: 0px 3px 0px 3px;
+}
+#churchFinder #searchPanel {
+	clear:both;
+	font-size:100%;
+}
+#searchPanel label {
+	display:block;
+	text-transform:uppercase;
+	color:rgb(255,255,255);
+}
+#searchPanel #nameSearchForm, 
+#searchPanel #deanerySearchForm, 
+#searchPanel #addressSearchForm 
+{
+	display:block;
+	float:left;
+	padding:10px;
+	margin: 3px;
+}
+#searchPanel #nameSearchForm {
+	width:200px;
+	background-color:rgb(103,131,139);
+}
+#searchPanel #nameSearch {
+      width:140px;
+}
+#searchPanel #deanerySearchForm {
+	width:200px;
+	background-color:rgb(134,167,135);
+}
+#searchPanel #deanerySearch {
+	width:140px;
+}
+#searchPanel #addressSearchForm {
+	width:288px;
+	background-color:rgb(150,144,140);
+	clear:right;
+}
+#searchPanel #addressSearch {
+	width:228px;
+}
+
+#churchFinder #resultsPanel {
+	clear:both;
+	margin: 3px;
+}
+#resultsPanel #searchResultsLabel,
+#resultsPanel #status {
+	padding:10px;
+}
+#resultsPanel #searchResultsLabel {
+	display:block;
+	float:left;
+	width:100px;
+	background-color:rgb(220,220,220);
+	padding-bottom:13px;
+
+}
+#churchFinder #status {
+	display:block;
+	float:left;
+	width:500px;
+	background-color:rgb(139,173,182);
+	margin-left:3px;
+	margin-bottom:3px;
+	clear:right;
+}
+#searchResults {
+	clear:both;
+	height:250px;
+	overflow:auto;
+	padding: 10px;
+	width:600px;
+}
+#searchResults table {
+	table-layout:fixed;
+}
+#searchResults td {
+        font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+	vertical-align:top;
+	padding:2px;
+	padding-bottom:8px;
+	border-top:solid 1px rgb(180,180,180);
+}
+#searchResults tr:HOVER {
+	background-color:rgb(225,225,225);
+}
+#searchResults .name { width:200px; }
+#searchResults .address  { width:170px; }
+#searchResults .phone  { width:80px; }
+#searchResults .website  { width:50px; }
+#searchResults .deanery  { width:50px; }
+
+sidebar:
+<div class="box">
+  <div class="greenBox">
+    <h2>Church Finder</h2>
+    <p>Want to visit one of the 157 parishes within our Diocese? Take a look around, there is a wonderful and diverse community out there and we'll get you setup with driving directions."</p>
+  <r:directory:search:by_name:form>
+    <label for="nameSearch">Search By Name:</label><br />
+    <r:directory:search:by_name:name_field />
+    <r:directory:search:by_name:submit_button />
+  </r:directory:search:by_name:form>
+  <r:directory:search:by_proximity:form>
+    <label for="proximitySearchAddress">Search By Proximity to an Address:</label><br />
+    <r:directory:search:by_proximity:address_field /><br />
+    <label for="proximitySearchDistance">Within:</label><br />
+    <r:directory:search:by_proximity:distance_field />
+    <r:directory:search:by_proximity:submit_button />
+  </r:directory:search:by_proximity:form>
+   <br />
+   <r:directory:results:count /> Results<br />
+  </div>
+</div>
+
+
+
