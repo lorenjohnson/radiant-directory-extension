@@ -3,7 +3,8 @@
 <p>
   <%=@organization.address_line1%><br />
   <%=@organization.address_city%>, <%=@organization.address_state%><%=@organization.address_zip%><br />
-  <%=@organization.phone%>
+  <%=@organization.email%><br />
+  <%=@organization.phone%><br />
   <%=@organization.website_url%>
 </p>
 <%= link_to "Edit", edit_directory_org_path(@organization) %> | <%= link_to "Back", directory_orgs_path %>

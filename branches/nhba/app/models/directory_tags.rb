@@ -9,7 +9,7 @@ class DirectoryTags < Page
   tag "directory:map" do |tag|
     content = %{
       <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=#{Radiant::Config['directory.google_map_key']}" type="text/javascript"></script>
-    	<script src="/assets/template/scripts/directory.js" type="text/javascript"></script> 
+    	<script src="/javascripts/directory.js" type="text/javascript"></script> 
       <div id="map"></div> }
     content << %{ <script type="text/javascript">search_address="#{@proximity_search_address}"</script> } unless @proximity_search_address.blank?
     content
@@ -75,11 +75,7 @@ class DirectoryTags < Page
           <r:directory:website_link [class=""] />
           </code></pre> }
   tag "directory:website_link" do |tag|
-    %{ 
-       <a href="http://#{tag.locals.org.website_url}" class="#{tag.attr['class']}">
-         #{tag.expand}
-       </a> 
-      } unless tag.locals.org.website_url.blank?
+    %{ <a href="http://#{tag.locals.org.website_url}" class="#{tag.attr['class']}">#{tag.expand}</a> } unless tag.locals.org.website_url.blank?
   end 
 
   desc %{ Creates a dirving directions link for this result. Assembles starting address from current result and ending address is captured from proximity search fields. If no proximity search has been initated or implemented the link will just go to Google Maps with the result's address. Tag has a class attribute for injecting a CSS class on the generated link.
@@ -125,6 +121,18 @@ class DirectoryTags < Page
       @proximity_search_distance
     end 
   end
+  tag "directory:search:by_category" do |tag|
+    tag.expand
+  end
+  tag "directory:search:by_category:form" do |tag|
+    content = %{<form id="categorySearchForm" name="categorySearchForm" class="#{tag.attr['class']}" method="get"><select onchange="window.open('?category=' + this.options[this.selectedIndex].value,'_top')">}
+    content << "<option value=''>All (#{DirectoryOrg.find(:all).nitems.to_s})</option>"
+    DirectoryOrg.find(:all).collect { |o| o.category }.uniq.sort.each do |c| 
+      content << "<option value='#{c}'>" + c +  " (" + DirectoryOrg.find_all_by_category(c).nitems.to_s + ")" + "</option>"
+    end
+    content << "</select></form>"
+  end
+  
   tag "directory:search:by_name" do |tag|
     tag.expand
   end
@@ -135,16 +143,20 @@ class DirectoryTags < Page
   	</form>
     }
   end
+  
+  tag "directory:search:by_name:form" do |tag|
+    %{ 
+      <form id="nameSearchForm" name="nameSearchForm" class="#{tag.attr['class']}" method="get">
+        #{tag.expand}
+      </form> 
+     }
+  end
   tag "directory:search:by_name:name_field" do |tag|
     current_value = @name_search
-   	  %{
-   	   <input id="nameSearch" name="nameSearch" type="text" value="#{current_value}" />  
-   	  }   
+   	%{ <input id="nameSearch" name="nameSearch" type="text" value="#{current_value}" /> }   
   end
   tag "directory:search:by_name:submit_button" do |tag|
-    %{
-      <input id="searchByNameButton" type="submit" value="Search" />
-    }
+    %{ <input id="searchByNameButton" type="submit" value="Search" /> }
   end
   tag "directory:search:by_proximity" do |tag|
     tag.expand
@@ -171,9 +183,7 @@ class DirectoryTags < Page
     content << "</select>"
   end
   tag "directory:search:by_proximity:submit_button" do |tag|
-    %{
-      <input id="searchByProximityButton" type="submit" value="Search" />
-    }
+    %{ <input id="searchByProximityButton" type="submit" value="Search" /> }
   end
   
   def cache?
@@ -181,36 +191,15 @@ class DirectoryTags < Page
   end
 
   def process(request,response)
-    @name_search = request.parameters["nameSearch"]
-    @proximity_search_address = request.parameters["proximitySearchAddress"]
-    @proximity_search_distance = request.parameters["proximitySearchDistance"]
+    search = DirectorySearch.new
+    search.category = request.parameters["category"]
+    search.name = request.parameters["nameSearch"]
+    search.from_address = request.parameters["proximitySearchAddress"] unless request.parameters["proximitySearchAddress"].blank?
+    search.max_distance = request.parameters["proximitySearchDistance"] unless request.parameters["proximitySearchDistance"].blank?
+    @orgs = search.execute
     @map_markers = ""
-
-    unless @name_search.blank? then
-      @orgs = DirectoryOrg.find(:all, :conditions => ["name LIKE ?", "%#{@name_search}%"], :order => "name ASC"  )
-    else 
-      unless @proximity_search_address.blank? 
-        @proximity_search_distance = 1000 if @proximity_search_distance.blank?  
-        lat, lng = geocode(@proximity_search_address)
-        @orgs = DirectoryOrg.find_all_by_point_and_radius(lat, lng, @proximity_search_distance)
-      else 
-        @orgs = DirectoryOrg.find(:all, :order => "name ASC")
-      end    
-    end    
-
     super
   end
-
-  def geocode(address)
-    require 'rexml/document'
-    require 'open-uri'   
-    uri = "http://maps.google.com/maps/geo?q=#{URI::encode(address)}&output=xml&key=#{Radiant::Config["directory.google_map_key"]}"
-    response = open(uri).read
-    response = REXML::Document.new(response)
-    lng, lat  = response.elements['kml/Response/Placemark/Point/coordinates'].text.split(",").collect { |s| s.to_f }   
-    return [lat, lng]
-  end
-
   
 end
 

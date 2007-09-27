@@ -1,10 +1,11 @@
 <%= render :partial => "header" %>
-<h1>Directory</h1>
+<%= link_to "Email to all", create_email_directory_orgs_path, :style => "float:right; margin-top: 15px;" %>
+<h1>Business Directory</h1>
 <table class="subscriptionList">
   <tr>
     <th>Name</th>
     <th>Address</th>
-    <th>Phone</th>
+    <th>Phone / Email</th>
     <th>Website URL</th>
     <th></th>
   </tr>
@@ -16,9 +17,12 @@
       <%=org.address_line1%><br />
       <%=org.address_city%>, <%=org.address_state%> <%=org.address_zip%>
     </td>
-    <td><%=org.phone%></td>
+    <td>
+      <%=org.phone%><br />
+      <%=org.email%>
+    </td>
     <td><%=org.website_url%></td>
-    <td width="100px"><%= link_to "Edit", edit_directory_org_path(org) %> | <%= link_to 'Destroy', directory_org_path(org), :confirm => "Are you sure you wish to delete this record?", :method => :delete %></td>
+    <td width="100px"><%= link_to "Edit", edit_directory_org_path(org) %> | <%= link_to 'Delete', directory_org_path(org), :confirm => "Are you sure you wish to delete this record?", :method => :delete %></td>
   </tr>
   <% alternate = !alternate %>
 <% end %>
