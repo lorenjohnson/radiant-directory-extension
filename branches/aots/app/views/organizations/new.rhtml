@@ -13,8 +13,9 @@
     <%= f.text_field :airtime %>
   </p>
   <p>
-    <b>Webstream</b><br />
-    <%= f.text_field :webstream %>
+    <b>Website url</b><br />
+    <%= f.text_field :website_url %>
+    <%= f.check_box :webstream %> <label for='organization_webstream'>Webstream</label>
   </p>
   <p>
     <b>Address</b><br />
@@ -24,10 +25,6 @@
   <p>
     <b>Phone</b><br />
     <%= f.text_field :phone %>
-  </p>
-  <p>
-    <b>Website url</b><br />
-    <%= f.text_field :website_url %>
   </p>
 
   <p>
