@@ -1,11 +1,14 @@
 class Organization < ActiveRecord::Base
   validates_presence_of :name, :address_city, :address_state
-  # attr :distance
 
   def geocode
     require 'rexml/document'
     require 'open-uri'   
-    address = address_line1 + ", " + address_city + ", " + address_state + " " + address_zip[0..4]
+
+    address_line1_value = (address_line1 unless address_line1.blank?) || ""
+    address_line1_value = address_line1_value + ", " unless address_line1_value.blank?
+    address = address_line1_value + address_city + ", " + address_state + " " + address_zip[0..4]
+
     uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=#{Radiant::Config['directory.google_map_key']}"
     response = open(uri).read
     response = REXML::Document.new(response)
