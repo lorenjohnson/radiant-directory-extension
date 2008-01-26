@@ -6,10 +6,8 @@
       <th>Name</th>
       <th>Dial</th>
       <th>Airtime</th>
-      <th>Website URL</th>
-      <th>Webstream</th>
+      <th>Website URL / Streaming</th>
       <th>Address</th>
-      <th>Phone</th>
       <th></th>
     </tr>
    </thead>
@@ -17,20 +15,18 @@
   <% alternate = false %>
   <% @organizations.each do |org| %>
     <tr class="node <%= alternate ? "alternate" : "" %>" id="org_<%=org.id%>">
-      <td class="snippet">
-          <a href="<%=edit_organization_path(org)%>"><%=org.name%></a>
+      <td class="layout">
+        <a href="<%=edit_organization_path(org)%>"><%=org.name%></a>
       </td>
       <td><%=org.dial%></td>
       <td><%=org.airtime%></td>
-      <td><%=org.website_url%></td>
-      <td><%="yes" if org.webstream%></td>
+      <td><%=org.website_url%> <%="(yes)" if org.webstream%></td>
       <td>
         <% unless org.address_line1.blank? %>
           <%=org.address_line1 %><br />
         <% end %>
         <%=org.address_city%>, <%=org.address_state%> <%=org.address_zip%>
       </td>
-      <td><%=org.phone%></td>
       <td width="100px">
       <%= link_to image_tag("/images/admin/remove.png"), organization_path(org), :confirm => "Are you sure you wish to delete this record?", :method => :delete %></td>
     </tr>
