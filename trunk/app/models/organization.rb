@@ -1,6 +1,5 @@
 class Organization < ActiveRecord::Base
-  validates_presence_of :name, :address_line1, :address_city, :address_state, :address_zip
-  belongs_to :directory_deanery
+  validates_presence_of :name, :address_city, :address_state
   # attr :distance
 
   def geocode
