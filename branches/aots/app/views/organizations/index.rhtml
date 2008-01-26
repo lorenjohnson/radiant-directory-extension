@@ -1,15 +1,15 @@
 <div style="float:right;"><%= link_to 'Add an Organization', new_organization_path %></div>
-<h1>Organization Directory</h1>
+<h1>Station Directory</h1>
 <table class="index">
   <thead>
     <tr>
       <th>Name</th>
       <th>Dial</th>
       <th>Airtime</th>
+      <th>Website URL</th>
       <th>Webstream</th>
       <th>Address</th>
       <th>Phone</th>
-      <th>Website URL</th>
       <th></th>
     </tr>
    </thead>
@@ -22,10 +22,12 @@
       </td>
       <td><%=org.dial%></td>
       <td><%=org.airtime%></td>
-      <td><%="yes" if org.webstream%></td>
       <td><%=org.website_url%></td>
+      <td><%="yes" if org.webstream%></td>
       <td>
-        <%=org.address_line1%><br />
+        <% unless org.address_line1.blank? %>
+          <%=org.address_line1 %><br />
+        <% end %>
         <%=org.address_city%>, <%=org.address_state%> <%=org.address_zip%>
       </td>
       <td><%=org.phone%></td>
