@@ -1,13 +1,13 @@
 class UpdateDirectoryForAotsReqs
   def self.up
     add_column :organizations, :dial, :string
-    add_column :organizations, :air_time, :string
-    add_column :organizations, :web_stream, :string
+    add_column :organizations, :airtime, :string
+    add_column :organizations, :webstream, :string
   end
 
   def self.down
     remove_column :organizations, :dial
-    remove_column :organizations, :air_time
-    remove_column :organizations, :web_stream
+    remove_column :organizations, :airtime
+    remove_column :organizations, :webstream
   end
 end

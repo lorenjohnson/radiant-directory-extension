@@ -1,7 +1,7 @@
 class DirectoryExtension < Radiant::Extension
-  version "1.0"
-  description "Radiant Organization Directory Extension."
-  url "http://www.fn-group.com"
+  version "0.1"
+  description "Art of Song Stations Directory Extension."
+  url "http://www.hellovenado.com"
 
   define_routes do |map|
     map.resources :organizations
