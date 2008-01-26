@@ -1,4 +1,4 @@
-class UpdateDirectoryForAotsReqs
+class UpdateDirectoryForAotsReqs < ActiveRecord::Migration
   def self.up
     add_column :organizations, :dial, :string
     add_column :organizations, :airtime, :string
