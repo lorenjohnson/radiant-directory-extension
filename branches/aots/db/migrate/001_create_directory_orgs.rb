@@ -13,7 +13,6 @@ class CreateDirectoryOrgs < ActiveRecord::Migration
       t.column :lat, :string
       t.column :lng, :string
       t.column :ignore_address, :boolean
-      t.column :deanery, :string
       t.column :created_at, :datetime
       t.column :updated_at, :datetime
     end
