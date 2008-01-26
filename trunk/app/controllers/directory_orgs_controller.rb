@@ -46,5 +46,5 @@ class DirectoryOrgsController < ApplicationController
     @organization.destroy
     redirect_to directory_orgs_url
   end
-
+        
 end
