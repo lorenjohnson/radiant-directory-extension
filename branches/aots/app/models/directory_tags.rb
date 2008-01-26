@@ -9,7 +9,7 @@ class DirectoryTags < Page
   tag "directory:map" do |tag|
     content = %{
       <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=#{Radiant::Config['directory.google_map_key']}" type="text/javascript"></script>
-    	<script src="/assets/template/scripts/directory.js" type="text/javascript"></script> 
+    	<script src="/javascripts/directory.js" type="text/javascript"></script> 
       <div id="map"></div> }
     content << %{ <script type="text/javascript">search_address="#{@proximity_search_address}"</script> } unless @proximity_search_address.blank?
     content
