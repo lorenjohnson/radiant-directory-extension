@@ -1,0 +1,26 @@
+<h1>Editing</h1>
+<h2><%=@organization.name%></h2>
+<% form_for(:organization, @organization, :url => organization_path(@organization), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name, :size => 50 %>
+  </p>
+  <p>
+    <b>Address</b><br />
+    <%= f.text_field :address_line1 %><br />
+    <%= f.text_field :address_city, :size => 14 %>, <%= f.text_field :address_state, :size => 2 %> <%= f.text_field :address_zip, :size => 10 %>
+  </p>
+  <p>
+    <b>Phone</b><br />
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <b>Website url</b><br />
+    <%= f.text_field :website_url %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+<%= link_to "Back", organizations_path %>
