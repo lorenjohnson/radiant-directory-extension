@@ -4,13 +4,12 @@ class DirectoryExtension < Radiant::Extension
   url "http://www.fn-group.com"
 
   define_routes do |map|
-    map.resources :directory_orgs
-    map.resources :configuration
+    map.resources :organizations
   end
   
   def activate
     # Radiant::Config['directory.google_map_key'] = "ABQIAAAAKsmqeCs1JL6iKytv5zPbWRRkAWczaLFjKT11Xwc79OTdW8lxTRQj-CVbOBChwHcHX51DsffpGXAr4w"
-    admin.tabs.add "Directory", "/directory_orgs", :after => "Layouts", :visibility => [:all]
+    admin.tabs.add "Directory", "/organizations", :after => "Layouts", :visibility => [:all]
     DirectoryTags
   end
   

@@ -1,4 +1,3 @@
-<%= render :partial => "header" %>
 <h2><%=@organization.name%></h2>
 <p>
   <%=@organization.address_line1%><br />
@@ -6,4 +5,4 @@
   <%=@organization.phone%>
   <%=@organization.website_url%>
 </p>
-<%= link_to "Edit", edit_directory_org_path(@organization) %> | <%= link_to "Back", directory_orgs_path %>
+<%= link_to "Edit", edit_organization_path(@organization) %> | <%= link_to "Back", organizations_path %>

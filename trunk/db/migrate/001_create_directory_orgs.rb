@@ -1,6 +1,6 @@
 class CreateDirectoryOrgs < ActiveRecord::Migration
   def self.up
-    create_table :directory_orgs do |t|
+    create_table :organizations do |t|
       t.column :name, :string
       t.column :address_line1, :string
       t.column :address_line2, :string
@@ -20,6 +20,6 @@ class CreateDirectoryOrgs < ActiveRecord::Migration
   end
   
   def self.down
-    drop_table :directory_orgs
+    drop_table :organizations
   end
 end

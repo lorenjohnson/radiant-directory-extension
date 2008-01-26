@@ -44,7 +44,7 @@ class DirectoryTags < Page
   end
   
   begin
-    DirectoryOrg.column_names.each do |column|
+    Organization.column_names.each do |column|
       desc %{ Display directory #{column}.  }
       tag "directory:#{column}" do |tag|
         hash = tag.locals.org
@@ -187,14 +187,14 @@ class DirectoryTags < Page
     @map_markers = ""
 
     unless @name_search.blank? then
-      @orgs = DirectoryOrg.find(:all, :conditions => ["name LIKE ?", "%#{@name_search}%"], :order => "name ASC"  )
+      @orgs = Organization.find(:all, :conditions => ["name LIKE ?", "%#{@name_search}%"], :order => "name ASC"  )
     else 
       unless @proximity_search_address.blank? 
         @proximity_search_distance = 1000 if @proximity_search_distance.blank?  
         lat, lng = geocode(@proximity_search_address)
-        @orgs = DirectoryOrg.find_all_by_point_and_radius(lat, lng, @proximity_search_distance)
+        @orgs = Organization.find_all_by_point_and_radius(lat, lng, @proximity_search_distance)
       else 
-        @orgs = DirectoryOrg.find(:all, :order => "name ASC")
+        @orgs = Organization.find(:all, :order => "name ASC")
       end    
     end    
 
