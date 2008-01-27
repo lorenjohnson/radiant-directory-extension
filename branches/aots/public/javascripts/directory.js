@@ -47,7 +47,7 @@ function map_load() {
 
   	map.addControl(new GSmallMapControl());
   	map.addControl(new GMapTypeControl());
-    map.setCenter(new GLatLng(45.5313220000000029585862648673355579376220703125, -122.693084), 14);
+    // map.setCenter(new GLatLng(45.5313220000000029585862648673355579376220703125, -122.693084), 5);
 	if(search_address) {
 		map_address_add(search_address,"Your address:<br />" + search_address);
 	}
