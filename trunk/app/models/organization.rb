@@ -7,8 +7,8 @@ class Organization < ActiveRecord::Base
 
     address_line1_value = (address_line1 unless address_line1.blank?) || ""
     address_line1_value = address_line1_value + ", " unless address_line1_value.blank?
-    address = address_line1_value + address_city + ", " + address_state + " " + address_zip[0..4]
-
+    address = address_line1_value + address_city + ", " + address_state
+    address << (" " + address_zip[0..4]) unless address_zip.blank?
     uri = "http://maps.google.com/maps/geo?q=" << URI::encode(address) << "&output=xml&key=#{Radiant::Config['directory.google_map_key']}"
     response = open(uri).read
     response = REXML::Document.new(response)
@@ -35,6 +35,12 @@ class Organization < ActiveRecord::Base
   end
              
   class << self   
+
+    def geocode_all
+      find(:all).each do |o|
+        o.geocode
+      end
+    end
        
     def find_all_by_point_and_radius(lat, lng, radius)
       #make sure we have valid parameters
