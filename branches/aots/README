@@ -1,6 +1,7 @@
 ORGANIZATION DIRECTORY EXTENSION
 
 == SETUP == 
+** Requires prototype.js
 
 1. Migrate extensions: 
 
