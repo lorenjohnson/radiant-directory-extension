@@ -21,8 +21,8 @@ class DirectoryTags < Page
 
   desc %{ Directory search results. }
   tag "directory:results:each" do |tag|
-    by = tag.attr['by'].blank ? 'name' : tag.attr['by'].downcase
-    order = tag.attr['order'].blank ? 'ASC' : tag.attr['order'].upcase
+    by = tag.attr['by'].blank? ? 'name' : tag.attr['by'].downcase
+    order = tag.attr['order'].blank? ? 'ASC' : tag.attr['order'].upcase
     @orgs = Organization.find(:all, :order => "#{by} #{order}")
     content = ''
     @map_markers = []
