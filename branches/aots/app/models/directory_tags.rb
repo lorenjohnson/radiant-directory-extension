@@ -21,6 +21,9 @@ class DirectoryTags < Page
 
   desc %{ Directory search results. }
   tag "directory:results:each" do |tag|
+    by = tag.attr['by'].blank ? 'name' : tag.attr['by'].downcase
+    order = tag.attr['order'].blank ? 'ASC' : tag.attr['order'].upcase
+    @orgs = Organization.find(:all, :order => "#{by} #{order}")
     content = ''
     @map_markers = []
     @orgs.each do |org|
@@ -76,7 +79,7 @@ class DirectoryTags < Page
           </code></pre> }
   tag "directory:website_link" do |tag|
     %{ 
-       <a href="http://#{tag.locals.org.website_url}" class="#{tag.attr['class']}">
+       <a href="#{tag.locals.org.website_url}" class="#{tag.attr['class']}">
          #{tag.expand}
        </a> 
       } unless tag.locals.org.website_url.blank?
@@ -194,7 +197,10 @@ class DirectoryTags < Page
         lat, lng = geocode(@proximity_search_address)
         @orgs = Organization.find_all_by_point_and_radius(lat, lng, @proximity_search_distance)
       else 
-        @orgs = Organization.find(:all, :order => "name ASC")
+        # Removed duplicated query. Proximity search won't be used in the version of this extension
+        # could be done without breaking the proximity search by just Array sorting the results in the directory:results:each tag
+        # which for now handles this query
+        # @orgs = Organization.find(:all, :order => "name ASC")
       end    
     end    
 
