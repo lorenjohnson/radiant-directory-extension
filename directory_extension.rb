@@ -1,15 +1,15 @@
 class DirectoryExtension < Radiant::Extension
-  version "1.0"
-  description "Radiant Organization Directory Extension."
-  url "http://www.fn-group.com"
+  version "0.1"
+  description "Art of Song Stations Directory Extension."
+  url "http://www.hellovenado.com"
 
   define_routes do |map|
     map.resources :organizations
   end
   
   def activate
-    # Radiant::Config['directory.google_map_key'] = "ABQIAAAAKsmqeCs1JL6iKytv5zPbWRRkAWczaLFjKT11Xwc79OTdW8lxTRQj-CVbOBChwHcHX51DsffpGXAr4w"
-    admin.tabs.add "Directory", "/organizations", :after => "Layouts", :visibility => [:all]
+    # Radiant::Config['directory.google_map_key'] = "ABQIAAAAKsmqeCs1JL6iKytv5zPbWRRxyiqsqZP386g7oAfXqfyEEC3E9hR3qqnQIloM6XhKCwZc2RyvblZH1g"
+    admin.tabs.add "Stations", "/organizations", :after => "Pages", :visibility => [:all]
     DirectoryTags
   end
   
