@@ -1,0 +1,57 @@
+ORGANIZATION DIRECTORY EXTENSION
+
+== SETUP == 
+
+1. Migrate extensions: 
+
+  rake db:migrate:extensions
+
+2. Update directory resources to instance public directory
+
+  rake radiant:extensions:directory:update
+  
+3. Go to api.google.com and get a Google Maps key and set it in Radiant:
+
+  script/console
+  Radiant::Config['directory.google_map_key'] = "fill in your Google Maps key here"
+
+
+== SAMPLE DIRECTORY OUTPUT ==
+
+1. Create new page with "DirectoryTags" as page type
+
+2. Copy this in at the body page part of that page:
+
+<r:directory:map />
+
+<div id="searchResults">
+  <r:directory:results:each>
+    <div style="display:none;">
+      <div class="map_infowindow" id="infoWindow_<r:directory:id />">
+        <b><r:name /></b><br />
+        <r:if_distance><r:distance format="%.1f miles" /> | </r:if_distance> 
+        <r:directions_link class="external">Driving Directions</r:directions_link>
+        <r:if_website_url> | <r:website_link class="external">Website</r:website_link></r:if_website_url><br />
+        <r:address_line1 /><br />
+        <r:address_city />, <r:address_state /> <r:address_zip /><br />
+        Phone <r:phone />
+      </div>
+    </div>
+    <div class="result" id="result_<r:id />">
+      <div class="name">
+        <strong><r:name /></strong>
+        <div class="distance">
+          <r:directions_link class="external">Driving Directions</r:directions_link>
+          <r:if_website_url> | <r:website_link class="external">Website</r:website_link></r:if_website_url>
+        </div>
+      </div>
+      <div class="detail" style="display:none;">
+        <div class="address">
+          <r:address_line1 /><br />
+          <r:address_city />, <r:address_state /> <r:address_zip /><br />
+          Phone <r:phone />   
+        </div>
+      </div>
+    </div>
+  </r:directory:results:each>
+</div>
