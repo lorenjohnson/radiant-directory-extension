@@ -1,0 +1,8 @@
+<h1>Editing Organization</h1>
+<% form_for(:organization, @organization, :url => admin_organization_path(@organization)) do |f| %>
+  <%= render :partial => "form", :locals => {:f => f} %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+<%= link_to "Back", admin_organizations_path %>

@@ -1,6 +1,4 @@
-class OrganizationsController < ApplicationController
-  # layout "main"
-  # no_login_required
+class Admin::OrganizationsController < ApplicationController
   
   def index  
     @organizations = Organization.find(:all, :order => "name")
@@ -17,10 +15,8 @@ class OrganizationsController < ApplicationController
   def update
     @organization = Organization.find(params[:id])
     if @organization.update_attributes(params[:organization]) and @organization.geocode
-      redirect_to organizations_url
+      redirect_to admin_organizations_path
     else
-      flash[:notice] = ""
-      @organization.errors.each_full { |e| flash[:notice] << e << ". " }
       render :action => "edit"
     end
   end
@@ -33,10 +29,8 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new(params[:organization])    
     if @organization.save and @organization.geocode
       flash[:notice] = 'Organization was successfully created.'        
-      redirect_to organizations_url
+      redirect_to admin_organizations_url
     else
-      flash[:notice] = ""
-      @organization.errors.each_full { |e| flash[:notice] << e << ". " }
       render :action => "new"
     end
   end
@@ -44,7 +38,8 @@ class OrganizationsController < ApplicationController
   def destroy
     @organization = Organization.find(params[:id])
     @organization.destroy
-    redirect_to organizations_url
+    flash[:notice] = "Organization successfully deleted."
+    redirect_to admin_organizations_url
   end
         
 end
